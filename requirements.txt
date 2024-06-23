@@ -1,0 +1,7 @@
+matrix-nio
+matrix-nio[e2e]
+openai
+requests
+pyjwt
+cryptography
+python-olm
