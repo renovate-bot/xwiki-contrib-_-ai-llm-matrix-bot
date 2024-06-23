@@ -2,7 +2,7 @@
 
 AI LLM Matrix Bot is an advanced chatbot for the [Matrix](https://matrix.org/) chat protocol, designed to interact with an XWiki server running a RAG (Retrieval-Augmented Generation) system. This bot can assume various personalities and interact with users in multiple languages, providing a flexible and powerful interface for AI-assisted communication.
 
-This project is based on [infinigpt-irc](https://github.com/h1ddenpr0cess20/infinigpt-irc/) by h1ddenpr0cess20, with significant modifications and enhancements to work with XWiki and custom AI models.
+This project is based on [nfinigpt-matrix](https://github.com/h1ddenpr0cess20/infinigpt-matrix/) by h1ddenpr0cess20, with significant modifications and enhancements to work with XWiki and custom AI models.
 
 ## Features
 
