@@ -57,9 +57,13 @@ nbproject
 .mvn/.gradle-enterprise
 .mvn/.develocity
 
+# nio_store
+nio_store
+
 # Misc
 *.log.*
 *.log
+*.pem
 .sonar-ide.properties
 .clover
 *~
