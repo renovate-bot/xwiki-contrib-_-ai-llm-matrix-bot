@@ -1,6 +1,6 @@
 # AI LLM Matrix Bot
 
-AI LLM Matrix Bot is an advanced chatbot for the [Matrix](https://matrix.org/) chat protocol, designed to interact with an XWiki server running a RAG (Retrieval-Augmented Generation) system. This bot can assume various personalities and interact with users in multiple languages, providing a flexible and powerful interface for AI-assisted communication.
+AI LLM Matrix Bot is a chatbot for the [Matrix](https://matrix.org/) chat protocol, designed to interact with an XWiki LLM application (https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/).
 
 This project is based on [nfinigpt-matrix](https://github.com/h1ddenpr0cess20/infinigpt-matrix/) by h1ddenpr0cess20, with significant modifications and enhancements to work with XWiki and custom AI models.
 
@@ -23,9 +23,15 @@ git clone https://github.com/xwiki-contrib/ai-llm-matrix-bot.git
 cd ai-llm-matrix-bot
 ```
 
-2. Install the required dependencies:
+2. Prepare the environment using conda:
 ```
-pip install -r requirements.txt
+conda env create -f environment.yml
+```
+
+and activate it
+
+```
+conda activate matrix-bot
 ```
 
 3. Set up a [Matrix account](https://app.element.io/) for your bot.  You'll need the server, username and password.
@@ -41,11 +47,18 @@ pip install -r requirements.txt
 
 5. Generate an EdDSA key pair and save the private key as `private.pem` in the project directory.
 
+```
+openssl genpkey -algorithm ed25519 -outform PEM -out private.pem
+openssl pkey -in private.pem -pubout -outform PEM -out public.pem
+```
+
 Plug those into the appropriate variables in the config.json file.
 
-6. Run the bot:
+6. Configure the XWiki server to accept JWT tokens from the bot, using https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/Authenticator/
+
+7. Run the bot:
 ```
-python3 src/main.py
+python infinigpt.py
 ```
 ## Configuration
 

@@ -1,0 +1,15 @@
+name: matrix-bot
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - matrix-nio
+    - matrix-nio[e2e]
+    - openai
+    - requests
+    - pyjwt
+    - cryptography
+    - python-olm

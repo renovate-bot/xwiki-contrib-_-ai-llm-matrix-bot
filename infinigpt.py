@@ -52,10 +52,10 @@ class InfiniGPT:
         self.config = Config("config.json")
         self.private_key = self._load_private_key()
         self.client = self._setup_matrix_client()
-        self.openai = None  # We'll initialize this later
-        self.models = []  # We'll populate this later
+        self.openai = None
+        self.models = []
         self.default_model = self.config.default_model
-        self.current_model = None  # We'll set this in initialize_openai
+        self.current_model = None
         self.join_time = datetime.datetime.now(datetime.timezone.utc)
         self.messages: Dict[str, Dict[str, List[Dict[str, str]]]] = {}
         self.prompt = (
