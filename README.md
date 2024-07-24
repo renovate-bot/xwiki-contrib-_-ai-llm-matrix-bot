@@ -38,6 +38,7 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
     - `restrict_to_specified_models`: Boolean value, if true the available models will be restricted to the list set above 
     - `server`: Matrix server URL. (Default value `https://matrix.org`)
     - `xwiki_xwiki_v1_endpoint`: XWiki RAG system endpoint. (default value: `http://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1`)
+        - for use with docker on the same network `http://[container-name]:[internal-port]/rest/wikis/xwiki/aiLLM/v1`
     - `matrix_username` and `matrix_password`: Matrix credentials of the bot's user
     - `device_id`: Random string (default value: `4d34ac89fd7346e4aaf4b896763b8f2b`)
     - `admins`: List of Matrix user IDs with admin privileges 
@@ -51,6 +52,7 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
     - `jwt_payload`: Custom claims for the JWT used for XWiki authentication
         - `iss`: the issuer, corresponding to the URL property configured in the authorized applications (can be a string value ex: `matrix-bot`)
         - `aud`: the audience, must contain the URL of the XWiki installation in the form `https://www.example.com/` without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
+            - for use with docker on the same network `http://[container-name]:[internal-port]/`
         - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user.
     -`sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
     - `response_temperature`: temperature to be used for the models (value between 0 and 2)
