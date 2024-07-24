@@ -53,7 +53,7 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
         - `iss`: the issuer, corresponding to the URL property configured in the authorized applications (can be a string value ex: `matrix-bot`)
         - `aud`: the audience, must contain the URL of the XWiki installation in the form `https://www.example.com/` without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
             - for use with docker on the same network `http://[container-name]:[internal-port]/`
-        - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user.
+        - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user. (Default value: ["MatrixGroup"])
     -`sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
     - `response_temperature`: temperature to be used for the models (value between 0 and 2)
     - `jwt_expiration_hours`: expiration period for the jwt expressed in hours
@@ -124,6 +124,12 @@ conda activate matrix-bot
 ```
 python infinigpt.py
 ```
+
+## Allow access
+Before you can talk to the model you first need allow access to it from the AI LLM application.
+A new group defined in the confi.json (by default `MatrixGroup`) shoud be available in your xwiki instance.
+Add it to the list of groups that can query the model in the AI LLM application's model configurtion using the `group` field.
+Note: on default setups using `XWikiAllGroup` should also work.
 
 ## Usage
 
