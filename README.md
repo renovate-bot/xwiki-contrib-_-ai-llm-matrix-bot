@@ -16,14 +16,55 @@ This project is based on [nfinigpt-matrix](https://github.com/h1ddenpr0cess20/in
 
 ## Setup
 
-1. Clone the repository:
+- Clone the repository:
 
 ```
 git clone https://github.com/xwiki-contrib/ai-llm-matrix-bot.git
 cd ai-llm-matrix-bot
 ```
 
-2. Prepare the environment using conda:
+- Generate an EdDSA key pair and save the private key as `private.pem` in the project directory.
+
+```
+openssl genpkey -algorithm ed25519 -outform PEM -out private.pem
+openssl pkey -in private.pem -pubout -outform PEM -out public.pem
+```
+
+- Set up a [Matrix account](https://app.element.io/) for your bot.  You'll need the server, username and password.
+
+- Update the configuration file `config.json` according to your needs 
+    Fields:
+    - `models`: String list of allowed AI models
+    - `restrict_to_specified_models`: Boolean value, if true the available models will be restricted to the list set above 
+    - `server`: Matrix server URL. (Default value `https://matrix.org`)
+    - `xwiki_xwiki_v1_endpoint`: XWiki RAG system endpoint. (default value: "http://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1")
+    - `matrix_username` and `matrix_password`: Matrix credentials of the bot's user
+    - `device_id`: Random string (default value: `4d34ac89fd7346e4aaf4b896763b8f2b`)
+    - `admins`: List of Matrix user IDs with admin privileges 
+    - `channels`: List of room ids the bot will join if `auto_join_rooms` is set to false 
+    - `auto_join_rooms`: Boolean value, if set to true the channels field will be ignored
+    - `personality`: Text prompt defining the default personality of the bot
+    - `moderation_strategy`: Defines the moderation strategy used (Current supported values: `forbidden_words`)
+    - `forbidden_words`: List of words to be filtered in moderation
+    - `moderation_enabled`: Boolean value that enables or disables the moderation strategy defined above
+    - `default_model`: The default AI model selected
+    - `jwt_payload`: Custom claims for the JWT used for XWiki authentication
+        - `iss`: the issuer, corresponding to the URL property configured in the authorized applications (can be a string value ex: `matrix-bot`)
+        - `aud`: the audience, must contain the URL of the XWiki installation in the form https://www.example.com/ without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
+        - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user.
+    -`sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
+    - `response_temperature`: temperature to be used for the models (value between 0 and 2)
+    - `jwt_expiration_hours`: expiration period for the jwt expressed in hours
+
+- Configure the XWiki server to accept JWT tokens from the bot, using https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/Authenticator/
+
+### Using conda
+
+- Install [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) if you haven't already.
+
+- Make sure you are in the cloned repository's folder (see first setup step)
+
+- Prepare the environment using conda:
 ```
 conda env create -f environment.yml
 ```
@@ -33,49 +74,54 @@ and activate it
 ```
 conda activate matrix-bot
 ```
-
-3. Set up a [Matrix account](https://app.element.io/) for your bot.  You'll need the server, username and password.
-
-4. Create a `config.json` file based on the provided template and fill in the necessary details:
-- Matrix server information
-- XWiki endpoint
-- Bot credentials
-- Allowed channels
-- Admin users
-- Default model and other configuration options
-
-
-5. Generate an EdDSA key pair and save the private key as `private.pem` in the project directory.
-
-```
-openssl genpkey -algorithm ed25519 -outform PEM -out private.pem
-openssl pkey -in private.pem -pubout -outform PEM -out public.pem
-```
-
-Plug those into the appropriate variables in the config.json file.
-
-6. Configure the XWiki server to accept JWT tokens from the bot, using https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/Authenticator/
-
-7. Run the bot:
+- Run the bot:
 ```
 python infinigpt.py
 ```
-## Configuration
 
-The `config.json` file contains all the necessary configuration options. Here are some key settings:
+### Using Docker 
 
-- `models`: List of allowed AI models
-- `server`: Matrix server URL
-- `xwiki_xwiki_v1_endpoint`: XWiki RAG system endpoint
-- `matrix_username` and `matrix_password`: Bot's Matrix credentials
-- `channels`: List of allowed Matrix channels
-- `admins`: List of Matrix user IDs with admin privileges
-- `default_model`: The default AI model to use
-- `jwt_payload`: Custom claims for the JWT used in XWiki authentication
-- `moderation_enabled` and `moderation_strategy`: Content moderation settings
-- `forbidden_words`: List of words to be filtered in moderation
+- Make sure you have docker installed 
+    - Install Docker:
+        Follow the official Docker installation guide for your operating system:
+        https://docs.docker.com/get-docker/
 
-Refer to the comments in the `config.json` file for detailed explanations of each option.
+- Make sure you have Docker Compose installed
+    - Docker Compose is included with Docker Desktop for Windows and macOS. For Linux, follow the installation instructions here:
+        https://docs.docker.com/compose/install/
+
+- Make sure you are in the cloned repository's folder (see first setup step)
+
+- To verify the docker installation you can use:
+```
+docker --version
+docker compose version
+```
+These commands should display the installed versions of Docker and Docker Compose.
+
+- Build and start the container:
+
+```
+docker compose up --build -d
+```
+
+- View logs:
+
+```
+docker logs -f matrix-bot
+```
+
+- Stop the container:
+
+```
+docker compose down
+```
+
+The Docker setup includes:
+- A volume for nio_store to persist data
+- A volume for the config directory
+- Mounted private.pem and public.pem files
+- Connection to the xwiki-nw network for communication with XWiki (if your xwiki instance is also setup with docker and uses the default network)
 
 ## Usage
 
