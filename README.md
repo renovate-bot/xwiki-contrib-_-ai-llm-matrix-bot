@@ -37,7 +37,7 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
     - `models`: String list of allowed AI models
     - `restrict_to_specified_models`: Boolean value, if true the available models will be restricted to the list set above 
     - `server`: Matrix server URL. (Default value `https://matrix.org`)
-    - `xwiki_xwiki_v1_endpoint`: XWiki RAG system endpoint. (default value: "http://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1")
+    - `xwiki_xwiki_v1_endpoint`: XWiki RAG system endpoint. (default value: `http://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1`)
     - `matrix_username` and `matrix_password`: Matrix credentials of the bot's user
     - `device_id`: Random string (default value: `4d34ac89fd7346e4aaf4b896763b8f2b`)
     - `admins`: List of Matrix user IDs with admin privileges 
@@ -50,34 +50,13 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
     - `default_model`: The default AI model selected
     - `jwt_payload`: Custom claims for the JWT used for XWiki authentication
         - `iss`: the issuer, corresponding to the URL property configured in the authorized applications (can be a string value ex: `matrix-bot`)
-        - `aud`: the audience, must contain the URL of the XWiki installation in the form https://www.example.com/ without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
+        - `aud`: the audience, must contain the URL of the XWiki installation in the form `https://www.example.com/` without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
         - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user.
     -`sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
     - `response_temperature`: temperature to be used for the models (value between 0 and 2)
     - `jwt_expiration_hours`: expiration period for the jwt expressed in hours
 
 - Configure the XWiki server to accept JWT tokens from the bot, using https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/Authenticator/
-
-### Using conda
-
-- Install [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) if you haven't already.
-
-- Make sure you are in the cloned repository's folder (see first setup step)
-
-- Prepare the environment using conda:
-```
-conda env create -f environment.yml
-```
-
-and activate it
-
-```
-conda activate matrix-bot
-```
-- Run the bot:
-```
-python infinigpt.py
-```
 
 ### Using Docker 
 
@@ -122,6 +101,27 @@ The Docker setup includes:
 - A volume for the config directory
 - Mounted private.pem and public.pem files
 - Connection to the xwiki-nw network for communication with XWiki (if your xwiki instance is also setup with docker and uses the default network)
+
+### Alternatively using conda
+
+- Install [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) if you haven't already.
+
+- Make sure you are in the cloned repository's folder (see first setup step)
+
+- Prepare the environment using conda:
+```
+conda env create -f environment.yml
+```
+
+and activate it
+
+```
+conda activate matrix-bot
+```
+- Run the bot:
+```
+python infinigpt.py
+```
 
 ## Usage
 
