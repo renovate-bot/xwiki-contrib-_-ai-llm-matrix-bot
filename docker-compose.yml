@@ -1,17 +1,20 @@
-version: '3'
+version: '2'
+networks:
+  bridge:
+    driver: bridge
 services:
   ai-llm-matrix-bot:
     build:
       context: .
       dockerfile: docker/Dockerfile
     container_name: matrix-bot
+    environment:
+      - CONFIG_PATH=/app/config/config.json
     volumes:
       - ./nio_store:/app/nio_store
       - ./config:/app/config
       - ./private.pem:/app/private.pem
       - ./public.pem:/app/public.pem
-    environment:
-      - CONFIG_PATH=/app/config/config.json
     networks:
       - bridge
     logging:
@@ -19,7 +22,3 @@ services:
       options:
         max-size: "200m"
         max-file: "10"
-
-networks:
-  xwiki-nw:
-    external: true

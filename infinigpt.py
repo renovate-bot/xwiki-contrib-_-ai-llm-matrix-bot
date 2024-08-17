@@ -46,7 +46,6 @@ class Config:
         self.response_temperature = config[1].get('response_temperature', 1)
         self.jwt_expiration_hours = config[1].get('jwt_expiration_hours', 3)
         self.auto_join_rooms = config[1].get('auto_join_rooms', True)
-
 class InfiniGPT:
     def __init__(self):
         self.config = Config("config.json")
@@ -62,6 +61,7 @@ class InfiniGPT:
             "assume the personality of ",
             ".  roleplay and never break character. keep your responses relatively short."
         )
+        self.room_models = {}
 
     def _load_private_key(self):
         with open("private.pem", "rb") as key_file:
@@ -138,8 +138,8 @@ class InfiniGPT:
             logger.error("No models available. Bot may not function correctly.")
             self.current_model = self.default_model  # Fall back to default model even if not available
             
-    def change_model(self, model_id: str):
-        self.current_model = model_id
+    def change_model(self, room_id: str, model_id: str):
+        self.room_models[room_id] = model_id
 
     async def display_name(self, user: str) -> Optional[str]:
         try:
@@ -184,12 +184,13 @@ class InfiniGPT:
 
     async def respond(self, channel: str, sender: str, message: List[Dict[str, str]], sender2: Optional[str] = None):
         try:
-            if not self.current_model:
-                logger.error("No model selected. Using default model.")
-                self.current_model = self.default_model
+            model = self.room_models.get(channel, self.default_model)
+            if not model:
+                logger.error("No model selected for this room. Using default model.")
+                model = self.default_model
 
             response = self.openai.chat.completions.create(
-                model=self.current_model,
+                model=model,
                 temperature=self.config.response_temperature,
                 messages=message
             )
@@ -308,16 +309,17 @@ class InfiniGPT:
 
     async def _handle_model_command(self, room_id: str, sender: str, sender_display: str, message: str):
         if message == ".model" or message == ".models":
-            await self.send_message(room_id, f"Current model: {self.current_model}\nAvailable models: " + ", ".join(self.models))
+            current_model = self.room_models.get(room_id, self.default_model)
+            await self.send_message(room_id, f"Current model for this room: {current_model}\nAvailable models: " + ", ".join(self.models))
         elif message.startswith(".model ") and sender in self.config.admins:
             model_name = message.split(" ", 1)[1]
             if model_name in self.model_mapping:
                 model_id = self.model_mapping[model_name]
-                self.change_model(model_id)
-                await self.send_message(room_id, f"Model set to {model_name} ({model_id})")
+                self.change_model(room_id, model_id)
+                await self.send_message(room_id, f"Model for this room set to {model_name} ({model_id})")
             elif model_name == "reset":
-                self.change_model(self.default_model)
-                await self.send_message(room_id, f"Model set to {self.default_model}")
+                self.change_model(room_id, self.default_model)
+                await self.send_message(room_id, f"Model for this room reset to {self.default_model}")
             else:
                 await self.send_message(room_id, "Invalid model name. Try again.")
 
