@@ -13,3 +13,4 @@ dependencies:
     - pyjwt
     - cryptography
     - python-olm
+    - markdown2

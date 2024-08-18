@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import os
+import markdown2
 from typing import Dict, List, Optional, Any
 
 import jwt
@@ -113,7 +114,7 @@ class InfiniGPT:
                 models = sorted(available_models)
             
             self.model_mapping = {model['name']: model['id'] for model in data['data'] if model['name'] in models}
-            self.models = models  # Update the instance variable
+            self.models = models
             return models
         except requests.RequestException as e:
             logger.error(f"Error fetching models: {e}")
@@ -127,7 +128,7 @@ class InfiniGPT:
             api_key=api_key,
             base_url=self.config.xwiki_endpoint
         )
-        available_models = self.model_list()  # This now updates self.models
+        available_models = self.model_list()
         if available_models:
             if self.default_model not in available_models:
                 logger.warning(f"Default model {self.default_model} not available. Using first available model.")
@@ -136,7 +137,7 @@ class InfiniGPT:
                 self.current_model = self.default_model
         else:
             logger.error("No models available. Bot may not function correctly.")
-            self.current_model = self.default_model  # Fall back to default model even if not available
+            self.current_model = self.default_model
             
     def change_model(self, room_id: str, model_id: str):
         self.room_models[room_id] = model_id
@@ -148,6 +149,23 @@ class InfiniGPT:
         except Exception as e:
             logger.error(f"Error getting display name: {e}")
             return None
+
+    async def send_markdown_message(self, channel: str, message: str):
+        try:
+            html_content = markdown2.markdown(message)
+            await self.client.room_send(
+                room_id=channel,
+                message_type="m.room.message",
+                content={
+                    "msgtype": "m.text",
+                    "format": "org.matrix.custom.html",
+                    "body": message,
+                    "formatted_body": html_content
+                },
+                ignore_unverified_devices=True,
+            )
+        except Exception as e:
+            logger.error(f"Error sending markdown message: {e}")
 
     async def send_message(self, channel: str, message: str):
         try:
@@ -198,9 +216,9 @@ class InfiniGPT:
             await self.add_history("assistant", channel, sender, response_text)
             
             display_name = await self.display_name(sender2 or sender)
-            response_text = f"{display_name}:\n{response_text}"
+            response_text = f"{display_name}:\n\n{response_text}"
             
-            await self.send_message(channel, response_text)
+            await self.send_markdown_message(channel, response_text)
             
             if len(self.messages[channel][sender]) > 24:
                 del self.messages[channel][sender][1:3]
