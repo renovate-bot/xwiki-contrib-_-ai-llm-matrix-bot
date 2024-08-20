@@ -81,11 +81,13 @@ docker compose version
 ```
 These commands should display the installed versions of Docker and Docker Compose.
 
-- Build and start the container:
+- Start the container:
 
 ```
-docker compose up --build -d
+docker compose up
 ```
+
+Note: use flag `-d` to run the container in the background and `--build` to rebuild the image.
 
 - View logs:
 
