@@ -9,19 +9,18 @@
   },
   {
     "server": "https://matrix.org",
-    "xwiki_xwiki_v1_endpoint": "https://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1",
-    "matrix_username": "bot_username",
-    "matrix_password": "bot_password",
-    "device_id": "4d34ac89fd7346e4aaf4b896763b8f2b",
+    "xwiki_xwiki_v1_endpoint": "http://192.168.100.114:8080/xwiki/rest/wikis/xwiki/aiLLM/v1",
+    "matrix_username": "@allma-bot:matrix.org",
+    "matrix_password": "jVzwLqR3XrJ85r",
+    "device_id": "4d34ac89fd7346e4aaf4b896763b8f2g",
     "admins": [
-      "the_admins_matrix_username1",
-      "the_admins_matrix_username2"
+      "@ppantiru:matrix.xwiki.com"
     ],
     "channels": [
-      "your_matrix_room_ids"
+      "!AeOhYwlKssiBxXGFIY:matrix.xwiki.com"
     ],
     "auto_join_rooms": true,
-    "personality": "an AI that can assume any personality, named InfiniGPT, which by default is a professional search assistant which responds in the language of the users mesage, if unsure defaults to english.",
+    "personality": "an AI that can assume any personality, named InfiniGPT, which by default is a professional search assistant which responds in the language the user asks the question in.",
     "moderation_strategy": "forbidden_words",
     "forbidden_words": [
       "badword1",
@@ -32,8 +31,8 @@
     "default_model": "Documentation",
     "jwt_payload": {
       "iss": "matrix-bot",
-      "aud": "https://localhost:8080/",
-      "groups": ["MatrixGroup"]
+      "aud": "http://192.168.100.114:8080/",
+      "groups": ["XWikiAllGroup"]
     },
     "sync_timeout": 30000,
     "response_temperature": 0,

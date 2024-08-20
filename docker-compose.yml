@@ -4,9 +4,7 @@ networks:
     driver: bridge
 services:
   ai-llm-matrix-bot:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    image: xwikicontrib/ai-llm-matrix-bot
     container_name: matrix-bot
     environment:
       - CONFIG_PATH=/app/config/config.json

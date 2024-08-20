@@ -1,0 +1,42 @@
+[
+  {
+    "models": [
+      "gpt-3.5-turbo",
+      "gpt-4o",
+      "gpt-4o-mini"
+    ],
+    "restrict_to_specified_models": false
+  },
+  {
+    "server": "https://matrix.org",
+    "xwiki_xwiki_v1_endpoint": "https://localhost:8080/xwiki/rest/wikis/xwiki/aiLLM/v1",
+    "matrix_username": "bot_username",
+    "matrix_password": "bot_password",
+    "device_id": "4d34ac89fd7346e4aaf4b896763b8f2b",
+    "admins": [
+      "the_admins_matrix_username1",
+      "the_admins_matrix_username2"
+    ],
+    "channels": [
+      "your_matrix_room_ids"
+    ],
+    "auto_join_rooms": true,
+    "personality": "an AI that can assume any personality, named InfiniGPT, which by default is a professional search assistant which responds in the language of the users mesage, if unsure defaults to english.",
+    "moderation_strategy": "forbidden_words",
+    "forbidden_words": [
+      "badword1",
+      "badword2",
+      "badword3"
+    ],
+    "moderation_enabled": false,
+    "default_model": "Documentation",
+    "jwt_payload": {
+      "iss": "matrix-bot",
+      "aud": "https://localhost:8080/",
+      "groups": ["MatrixGroup"]
+    },
+    "sync_timeout": 30000,
+    "response_temperature": 0,
+    "jwt_expiration_hours": 9
+  }
+]
