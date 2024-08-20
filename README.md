@@ -1,18 +1,19 @@
 # AI LLM Matrix Bot
 
-AI LLM Matrix Bot is a chatbot for the [Matrix](https://matrix.org/) chat protocol, designed to interact with an XWiki LLM application (https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/).
+AI LLM Matrix Bot is a chatbot for the [Matrix](https://matrix.org/) chat protocol, designed to interact with [XWiki's LLM](https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/) application from the Matrix Element chat.
 
-This project is based on [nfinigpt-matrix](https://github.com/h1ddenpr0cess20/infinigpt-matrix/) by h1ddenpr0cess20, with significant modifications and enhancements to work with XWiki and custom AI models.
+This project is based on [nfinigpt-matrix](https://github.com/h1ddenpr0cess20/infinigpt-matrix/) by h1ddenpr0cess20, with significant modifications.
 
 ## Features
 
 - Interacts with XWiki's RAG system for enhanced responses
-- Supports multiple AI models, configurable through the XWiki interface
+- Supports setting different AI models per room, configurable through the XWiki interface
 - Personalized chat history for each user in each channel
 - Ability to assume different personalities or use custom prompts
 - Collaborative feature allowing users to interact with each other's chat histories
 - Configurable moderation system to filter inappropriate content
 - Flexible JWT-based authentication for secure communication with the XWiki server
+- Support for E2EE encrypted rooms
 
 ## Setup
 
@@ -103,7 +104,7 @@ The Docker setup includes:
 - A volume for the config directory
 - Mounted private.pem and public.pem files
 
-### Using docker `run`
+### Using `docker run`
 
 Note: Make sure the directories you are mounting into the container are fully-qualified, and aren't relative paths.
 
@@ -175,6 +176,7 @@ and activate it
 ```
 conda activate matrix-bot
 ```
+
 - Run the bot:
 ```
 python infinigpt.py
