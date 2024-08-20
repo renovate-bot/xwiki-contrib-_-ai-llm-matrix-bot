@@ -54,13 +54,13 @@ openssl pkey -in private.pem -pubout -outform PEM -out public.pem
         - `aud`: the audience, must contain the URL of the XWiki installation in the form `https://www.example.com/` without path. Both a single string and an array of strings are supported. If the expected URL isn't passed, an error is logged with the expected URL.
             - for use with docker on the same network `http://[container-name]:[internal-port]/`
         - `groups`: a list of groups (as list of strings). Used to set the groups for the bot's user. (Default value: ["MatrixGroup"])
-    -`sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
+        - `sync_timeout`: sets the timeout value for the Matrix client's sync operation. It determines how long the client will wait for a response from the server during the synchronization process (expressed in miliseconds)
     - `response_temperature`: temperature to be used for the models (value between 0 and 2)
     - `jwt_expiration_hours`: expiration period for the jwt expressed in hours
 
 - Configure the XWiki server to accept JWT tokens from the bot, using https://extensions.xwiki.org/xwiki/bin/view/Extension/LLM/Authenticator/
 
-### Using Docker 
+### Using `docker compose`
 
 - Make sure you have docker installed 
     - Install Docker:
@@ -102,7 +102,62 @@ The Docker setup includes:
 - A volume for nio_store to persist data
 - A volume for the config directory
 - Mounted private.pem and public.pem files
-- Connection to the xwiki-nw network for communication with XWiki (if your xwiki instance is also setup with docker and uses the default network)
+
+### Using docker `run`
+
+Note: Make sure the directories you are mounting into the container are fully-qualified, and aren't relative paths.
+
+To build and run the ai-llm-matrix-bot using Docker directly, follow these steps:
+
+- Build the Docker image:
+
+```
+docker build -t ai-llm-matrix-bot -f docker/Dockerfile .
+```
+
+- Run the container:
+
+```
+docker run -d \
+  --name matrix-bot \
+  -e CONFIG_PATH=/app/config/config.json \
+  -v $(pwd)/nio_store:/app/nio_store \
+  -v $(pwd)/config:/app/config \
+  -v $(pwd)/private.pem:/app/private.pem \
+  -v $(pwd)/public.pem:/app/public.pem \
+  --network bridge \
+  --log-driver json-file \
+  --log-opt max-size=200m \
+  --log-opt max-file=10 \
+  ai-llm-matrix-bot
+```
+
+This command does the following:
+
+- Names the container "matrix-bot"
+- Sets the CONFIG_PATH environment variable
+- Mounts the necessary volumes for nio_store, config, and key files
+- Uses the bridge network
+- Configures logging with a max size of 200MB and up to 10 log files
+
+
+To view the logs:
+
+```
+docker logs -f matrix-bot
+```
+
+To stop the container:
+
+```
+docker stop matrix-bot
+```
+
+To remove the container:
+
+```
+docker rm matrix-bot
+```
 
 ### Alternatively using conda
 
